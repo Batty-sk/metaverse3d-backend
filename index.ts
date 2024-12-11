@@ -34,10 +34,13 @@ io.on("connection", (socket) => {
     io.emit(""); // emit the onFriendsMessage ,so that only the friends of his will reicienve the messag......
   });
 
+  
   socket.on("exchangeIceCandidates", (iceCandidateData) => {
     // on recieivng the ice candidate data we have to send the avaialabe users's ice candiate data to him and to all the connected user , so that they can talk with each other if they ever come in the radius .
     
 });
+
+
 });
 
 io.listen(8080);
