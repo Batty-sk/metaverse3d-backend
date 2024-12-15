@@ -3,15 +3,18 @@ import { Server } from "socket.io";
 
 const server = http.createServer();
 
-type connectedUsersProps = {
-    socketId:string,
-    iceCandidatesData:{}
-
+interface connectedUsersProps {
+  socketId: string;
+  iceCandidatesData: {};
 }
 
-const connectedUsers:connectedUsersProps = {
-    socketId:'',
-    iceCandidatesData:{}
+interface coordinates {
+  x: number;
+  y: number;
+  z: number;
+}
+interface registerMeProp {
+  peerID: string;
 }
 
 const io = new Server(server, {
@@ -34,13 +37,24 @@ io.on("connection", (socket) => {
     io.emit(""); // emit the onFriendsMessage ,so that only the friends of his will reicienve the messag......
   });
 
-  
+  socket.on("registerMe", (args: registerMeProp) => {
+    console.log("registerMe is called from the socket:", args.peerID);
+    socket.broadcast.emit("someone-joins", args.peerID);
+  });
+
+  socket.on("send-coordinates", (args: coordinates) => {
+    console.log('sending coordinates from socket',args,socket.id)
+    socket.broadcast.emit("someone-coordinates", {
+      socketId: socket.id,
+      x: args.x,
+      y: args.y,
+      z: args.z,
+    });
+  });
+
   socket.on("exchangeIceCandidates", (iceCandidateData) => {
     // on recieivng the ice candidate data we have to send the avaialabe users's ice candiate data to him and to all the connected user , so that they can talk with each other if they ever come in the radius .
-    
-});
-
-
+  });
 });
 
 io.listen(8080);
