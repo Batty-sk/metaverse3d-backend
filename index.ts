@@ -41,7 +41,9 @@ io.on("connection", (socket) => {
     console.log("registerMe is called from the socket:", args.peerID);
     socket.broadcast.emit("someone-joins", args.peerID);
   });
-
+  socket.on('send-message',(args:{msg:string,to:string})=>{
+    socket.to(args.to).emit('chat-messages',args.msg)
+  })
   socket.on("send-coordinates", (args: coordinates) => {
     console.log('sending coordinates from socket',args,socket.id)
     socket.broadcast.emit("someone-coordinates", {
@@ -55,6 +57,12 @@ io.on("connection", (socket) => {
   socket.on("exchangeIceCandidates", (iceCandidateData) => {
     // on recieivng the ice candidate data we have to send the avaialabe users's ice candiate data to him and to all the connected user , so that they can talk with each other if they ever come in the radius .
   });
+
+  socket.on("disconnect",(reason)=>{
+    console.log('socket with socket.id has been disconnected!',socket.id)
+    console.log("reason is whatever!")
+    socket.broadcast.emit("someone-leaves",socket.id)
+  })
 });
 
 io.listen(8080);
