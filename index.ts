@@ -42,7 +42,11 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("someone-joins", args.peerID);
   });
   socket.on('send-message',(args:{msg:string,to:string})=>{
-    socket.to(args.to).emit('chat-messages',args.msg)
+    socket.to(args.to).emit('chat-messages',{from:socket.id,msg:args.msg})
+  })
+  socket.on("sendVideoUrl",(videoURL:string)=>{
+    socket.broadcast.emit("video-url", videoURL);
+    console.log("sending the video url to all the other peers",videoURL)
   })
   socket.on("send-coordinates", (args: coordinates) => {
     console.log('sending coordinates from socket',args,socket.id)
