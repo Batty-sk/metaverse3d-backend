@@ -31,7 +31,6 @@ io.on("connection", function (socket) {
         console.log("sending the video url to all the other peers", videoURL);
     });
     socket.on("send-coordinates", function (args) {
-        console.log('sending coordinates from socket', args, socket.id);
         socket.broadcast.emit("someone-coordinates", {
             socketId: socket.id,
             x: args.x,
