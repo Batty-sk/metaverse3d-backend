@@ -19,7 +19,7 @@ interface registerMeProp {
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // Allow your frontend's origin
+    origin: ["http://localhost:3000", "https://metaverse3d-pzxi.vercel.app"], 
     methods: ["GET", "POST"], // Specify allowed methods
     credentials: true, // If using cookies or authentication
   },
@@ -29,9 +29,6 @@ io.on("connection", (socket) => {
   console.log("A socket has been connected ! with socket id ", socket.id);
 
   socket.on("onMessage", (args) => {
-    console.log("message we recievvneing ...", args);
-    console.log("socket who has sent this messgge is", socket.id);
-
     // on recieveing the message from the client we can send this to all the users / or we can say its
     // friends yeah... using the io instance
     io.emit(""); // emit the onFriendsMessage ,so that only the friends of his will reicienve the messag......
@@ -49,7 +46,6 @@ io.on("connection", (socket) => {
     console.log("sending the video url to all the other peers",videoURL)
   })
   socket.on("send-coordinates", (args: coordinates) => {
-    console.log('sending coordinates from socket',args,socket.id)
     socket.broadcast.emit("someone-coordinates", {
       socketId: socket.id,
       x: args.x,
@@ -69,4 +65,6 @@ io.on("connection", (socket) => {
   })
 });
 
-io.listen(8080);
+const PORT:any = process.env.PORT || 8080; 
+io.listen(PORT);
+console.log(`Server is running on port ${PORT}`);

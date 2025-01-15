@@ -5,9 +5,9 @@ var socket_io_1 = require("socket.io");
 var server = http.createServer();
 var io = new socket_io_1.Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Allow your frontend's origin
-        methods: ["GET", "POST"], // Specify allowed methods
-        credentials: true, // If using cookies or authentication
+        origin: ["http://localhost:3000", "https://metaverse3d-pzxi.vercel.app"], 
+        methods: ["GET", "POST"], 
+        credentials: true, 
     },
 });
 io.on("connection", function (socket) {
@@ -39,13 +39,13 @@ io.on("connection", function (socket) {
             z: args.z,
         });
     });
-    socket.on("exchangeIceCandidates", function (iceCandidateData) {
-        // on recieivng the ice candidate data we have to send the avaialabe users's ice candiate data to him and to all the connected user , so that they can talk with each other if they ever come in the radius .
-    });
+
     socket.on("disconnect", function (reason) {
         console.log('socket with socket.id has been disconnected!', socket.id);
         console.log("reason is whatever!");
         socket.broadcast.emit("someone-leaves", socket.id);
     });
 });
-io.listen(8080);
+const PORT = process.env.PORT || 8080; 
+io.listen(PORT);
+console.log(`Server is running on port ${PORT}`);
